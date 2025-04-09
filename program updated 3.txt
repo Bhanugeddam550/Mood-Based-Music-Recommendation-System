@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mood Based Music Recommendation System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Telugu&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Noto Sans Telugu', sans-serif;
+      background: linear-gradient(135deg, #e0c3fc, #8ec5fc);
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      color: #222;
+    }
+
+    h1 {
+      font-size: 2.7rem;
+      margin: 40px 20px 20px;
+      color: #4b0082;
+      text-shadow: 0 0 5px #b39ddb, 0 0 10px #9575cd;
+    }
+
+    .mood-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 30px 20px;
+    }
+
+    .mood-buttons button {
+      background: #ffffff;
+      border: none;
+      border-radius: 20px;
+      padding: 15px 30px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #4b0082;
+      box-shadow:
+        0 0 10px rgba(123, 31, 162, 0.3),
+        4px 4px 10px rgba(0, 0, 0, 0.15),
+        -4px -4px 10px rgba(255, 255, 255, 0.8);
+      transition: 0.3s ease-in-out;
+    }
+
+    .mood-buttons button:hover {
+      background-color: #f8f0ff;
+      transform: scale(1.05);
+      box-shadow:
+        0 0 15px rgba(123, 31, 162, 0.6),
+        0 0 25px rgba(156, 39, 176, 0.5),
+        4px 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .results {
+      background-color: #ffffffdd;
+      border-radius: 15px;
+      padding: 30px;
+      margin: 30px auto;
+      max-width: 800px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .results h2 {
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      color: #333;
+      text-shadow: 0 0 6px #ce93d8;
+    }
+
+    .song {
+      margin: 10px 0;
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    .spotify-link {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #1DB954;
+      color: white;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: bold;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.2s;
+    }
+
+    .spotify-link:hover {
+      background-color: #169c44;
+    }
+
+    footer {
+      margin-top: 50px;
+      font-size: 14px;
+      color: #666;
+      text-shadow: 0 0 4px #d1c4e9;
+    }
+
+    @media (max-width: 600px) {
+      .mood-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .mood-buttons button {
+        width: 80%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎵 Mood Based Music Recommendation System</h1>
+
+  <div class="mood-buttons">
+    <button onclick="showMood('happy')">😊 Happy</button>
+    <button onclick="showMood('sad')">😢 Sad</button>
+    <button onclick="showMood('relaxed')">😌 Relaxed</button>
+    <button onclick="showMood('energetic')">⚡ Energetic</button>
+    <button onclick="showMood('romantic')">❤️ Romantic</button>
+  </div>
+
+  <div class="results" id="results">
+    <h2>Selected Telugu Songs Playlist</h2>
+    <p class="song" id="moodResult">Click on a mood above to explore Telugu songs that match your current vibe.</p>
+  </div>
+
+  <footer>
+    &copy; 2025 MoodTune | Designed with 💜 for Telugu Music Lovers
+  </footer>
+
+  <script>
+    const playlists = {
+      happy: {
+        url: "https://open.spotify.com/playlist/4M6rjevTc3ro0Nx7OAnnDG",
+        name: "Telugu Happy Vibes"
+      },
+      sad: {
+        url: "https://open.spotify.com/playlist/5J2ptZlcfqYEIUQilE1EPY",
+        name: "Telugu Sad Songs"
+      },
+      relaxed: {
+        url: "https://open.spotify.com/playlist/2wUEM7c1yXD9NNsApXt3YP",
+        name: "Relaxing Telugu Melodies"
+      },
+      energetic: {
+        url: "https://open.spotify.com/playlist/1TJiDN6enNpmlKxesTi7s8",
+        name: "Energetic Telugu Beats"
+      },
+      romantic: {
+        url: "https://open.spotify.com/playlist/1Efbjjp04dlImo3LUCij85",
+        name: "Telugu Romantic Hits"
+      }
+    };
+
+    const moodNames = {
+      happy: "Happy 😊",
+      sad: "Sad 😢",
+      relaxed: "Relaxed 😌",
+      energetic: "Energetic ⚡",
+      romantic: "Romantic ❤️"
+    };
+
+    function showMood(mood) {
+      const data = playlists[mood];
+      const moodLabel = moodNames[mood];
+      const resultEl = document.getElementById("moodResult");
+
+      if (data) {
+        resultEl.innerHTML = `
+          🎧 Your Mood Is: <strong>${moodLabel}</strong><br>
+          🎶 Recommended Playlist: <strong>${data.name}</strong><br>
+          <a href="${data.url}" target="_blank" class="spotify-link">Play on Spotify</a>
+        `;
+      } else {
+        resultEl.innerText = "No playlist found for this mood.";
+      }
+    }
+  </script>
+
+</body>
+</html>
